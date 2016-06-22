@@ -10,6 +10,7 @@ import android.net.Uri;
 import com.smscapture.smscapture.entity.MMSContentInfo;
 import com.smscapture.smscapture.entity.MMSInfo;
 import com.smscapture.smscapture.entity.MessageInfo;
+import com.smscapture.smscapture.entity.SNSInfo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,16 +36,27 @@ public class MessageUtil {
         return new MessageUtil(context.getContentResolver());
     }
 
-    public void getAllSms() {
+    public List<SNSInfo> getAllSms() {
+        List<SNSInfo> SNSInfos = new ArrayList<>();
         Uri uri = Uri.parse("content://sms/");
-        Cursor cur = contentResolver.query(uri, null, null, null, "date desc");
-        if (null == cur)
-            return;
-        if (cur.moveToNext()) {
-            String number = cur.getString(cur.getColumnIndex("address"));
-            String data = cur.getString(cur.getColumnIndex("data"));
-            String body = cur.getString(cur.getColumnIndex("body"));
+        Cursor cursor = contentResolver.query(uri, null, null, null, "date desc");
+        int address_index = cursor.getColumnIndex("address");
+        int date_index = cursor.getColumnIndex("date");
+        int body_index = cursor.getColumnIndex("body");
+        if (cursor.moveToNext()) {
+            String[] arr = cursor.getColumnNames();
+            String number = cursor.getString(address_index);
+            long date = cursor.getLong(date_index);
+            String body = cursor.getString(body_index);
+            SNSInfo snsInfo = new SNSInfo();
+            snsInfo.setBody(body);
+            snsInfo.setNumber(number);
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            String date_ss = formatter.format(new Date(date));
+            snsInfo.setDate(date_ss);
+            SNSInfos.add(snsInfo);
         }
+        return SNSInfos;
     }
 
     public List<MessageInfo> getAllMessage() {

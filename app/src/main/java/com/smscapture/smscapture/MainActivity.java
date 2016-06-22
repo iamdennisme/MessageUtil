@@ -18,6 +18,7 @@ import com.smscapture.smscapture.Util.ToastUtil;
 import com.smscapture.smscapture.adapter.MMSAdapter;
 import com.smscapture.smscapture.entity.MMSInfo;
 import com.smscapture.smscapture.entity.MessageInfo;
+import com.smscapture.smscapture.entity.SNSInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getSmsInfo() {
+        List<SNSInfo>SNSInfo=messageUtil.getAllSms();
         List<MessageInfo> allMessage = messageUtil.getAllMessage();
         List<MessageInfo> messageIds = messageUtil.getAllMms(allMessage);
         List<MMSInfo> mmsInfos = messageUtil.getMMSInfos(messageIds);
